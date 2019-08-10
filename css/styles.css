@@ -17,11 +17,16 @@ ul, li {
 	font-size: 10pt;
 	color: #333;
 }
+
+/* Focus to allow users to noticably tab through every important element */
+*:focus {
+	outline: 2px solid #d71ef7;
+}
 a {
 	color: #fff;
 	text-decoration: none;
 }
-a:hover, a:focus {
+a:hover {
 	color: #3397db;
 	text-decoration: none;
 }
