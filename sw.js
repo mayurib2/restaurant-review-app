@@ -30,31 +30,16 @@ self.addEventListener('install', (event) => {
     })
 );
 
-  self.addEventListener('activate', (event) => {
-    event.waitUntil(
-      caches.keys().then((cacheNames) => {
-        return Promise.all(
-          cacheNames.filter((cacheName) => {
-            return cacheName.startsWith('reviews-') &&
-                   cacheName != staticCacheName;
-          }).map((cacheName) => {
-            return cache.delete(cacheName);
-          })
-        );
-      })
-    );
-  });
-
-  self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', (event) => {
     // Respond with an entry from the cache if one is present
     // Else, fetch from the network
-    event.respondWith(
-      caches.match(event.request).then((response) =>{
-        if(response) return response;
-        return fetch(event.request);
-      }).catch((error) => {
-          console.log(error);
-          return;
-      }));
-    })
+  event.respondWith(
+    caches.match(event.request).then((response) =>{
+      if(response) return response;
+      return fetch(event.request);
+    }).catch((error) => {
+      console.log(error);
+      return;
+    }));
+  })
 });
