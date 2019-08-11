@@ -1,4 +1,4 @@
-let staticCacheName = 'reviews-cache-v4';
+let staticCacheName = 'reviews-cache-v2';
 
 /** Install Service Worker */
 
@@ -24,11 +24,32 @@ self.addEventListener('install', (event) => {
         'data/restaurants.json',
         'index.html',
         'restaurant.html',
-        'sw.js',
         'https://unpkg.com/leaflet@1.3.1/dist/leaflet.css',
         'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js']);
     })
 );
+
+/**
+ * Activation of service worker
+ */
+self.addEventListener('activate', function(event) {
+    event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.filter(function(cacheName) {
+                    return cacheName.startsWith('reviews-') &&
+                        cacheName != staticCacheName;
+                }).map(function(cacheName) {
+                    return caches.delete(cacheName);
+                })
+            );
+        })
+    );
+});
+
+/**
+ * Fetch for offline use
+*/
 
 self.addEventListener('fetch', (event) => {
     // Respond with an entry from the cache if one is present
